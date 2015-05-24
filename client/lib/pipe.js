@@ -1,4 +1,7 @@
 module.exports = {
+	executing: function (cmd, cmdArgs, cmdOptions) {
+		console.log('executing: ', cmd, cmdArgs, cmdOptions);
+	},
 	stdout : function(data) {
 		console.log('stdout: ', data.toString('utf8'));
 	},

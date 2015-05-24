@@ -2,6 +2,9 @@ var spawn = require('child_process').spawn;
 
 module.exports = function(cmd, args, commandOptions, pipe, callback) {
 	commandOptions = commandOptions || {};
+	
+	pipe.executing(cmd, args, commandOptions);
+	
 	var exec = spawn(cmd, args, commandOptions);
 
 	exec.stdout.on('data', pipe.stdout);
