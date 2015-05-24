@@ -35,6 +35,6 @@ module.exports =
 			var commandOptions = {
 					cwd : gitDir
 			};
-			performGitAction([ 'checkout', '--detach', buildTarget], commandOptions,  pipe, callback);			
+			performGitAction([ 'checkout', buildTarget], commandOptions,  pipe, callback);			
 		}
 	};
