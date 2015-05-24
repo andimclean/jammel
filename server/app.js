@@ -42,8 +42,8 @@ io.on('connection', function connection(socket) {
 			buildname: 'jammel', 
 			buildTarget: 'Develop', 
 			repository: 'git@github.com:andimclean/jammel.git',
-			cmd: './build',
-			cmdArgs: [],
+			cmd: 'bash',
+			cmdArgs: ['build'],
 			cmdDir: './'
 		});
 	});
