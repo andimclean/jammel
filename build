@@ -1,0 +1,9 @@
+#!/bin/bash
+
+pushd client
+npm install
+popd
+
+pushd server
+npm install
+popd

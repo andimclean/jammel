@@ -40,11 +40,11 @@ io.on('connection', function connection(socket) {
 		console.log('Got imavailable');
 		socket.emit('build', {
 			buildname: 'jammel', 
-			buildTarget: 'master', 
+			buildTarget: 'Develop', 
 			repository: 'git@github.com:andimclean/jammel.git',
-			cmd: 'npm',
-			cmdArgs: ['install'],
-			cmdDir: './client'
+			cmd: './build',
+			cmdArgs: [],
+			cmdDir: './'
 		});
 	});
 });
