@@ -1,28 +1,11 @@
-var   spawn = require('child_process').spawn
-	, path =require('path')
-	, step = require('step');
+var step = require('step')
+	, exec = require('./exec');
 
 function performGitAction(args, commandOptions, pipe, callback) {
 	commandOptions = commandOptions || {};
-	var gitclone = spawn('git', args, commandOptions);
-
-	gitclone.stdout.on('data', function(data) {
-		pipe.stdout(data);
-	});
-
-	gitclone.stderr.on('data', function(data) {
-		pipe.stderr(data);
-	});
-
-	gitclone.on('close', function(code) {
-		if (code !== 0) {
-			console.log(args);
-			callback('git exited with code ' + code);
-		} else {
-			callback();
-		}
-	});
+	exec('git', args, commandOptions, pipe, callback);
 }
+
 module.exports =
 	{
 		createMirror : function(mirrorDir, repository, pipe, callback) {

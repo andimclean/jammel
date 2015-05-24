@@ -39,8 +39,12 @@ io.on('connection', function connection(socket) {
 	socket.on('imavailable', function(data) {
 		console.log('Got imavailable');
 		socket.emit('build', {
-			buildname: 'charityaccounts', 
+			buildname: 'jammel', 
 			buildTarget: 'master', 
-			repository: 'git@github.com:andimclean/charityaccounts.git'});
+			repository: 'git@github.com:andimclean/jammel.git',
+			cmd: 'npm',
+			cmdArgs: ['install'],
+			cmdDir: './client'
+		});
 	});
 });
