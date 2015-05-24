@@ -1,15 +1,12 @@
-
 /**
  * Module dependencies.
  */
 
-var express = require('express')
-  , routes = require('./routes')
-  , user = require('./routes/user')
-  , http = require('http')
-  , path = require('path');
+var express = require('express'), routes = require('./routes'), user =
+		require('./routes/user'), http = require('http'), path =
+		require('path'), SocketIo = require('socket.io');
 
-var app = express();
+var app = express(), server, wss, io;
 
 // all environments
 app.set('port', process.env.PORT || 3000);
@@ -24,12 +21,26 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // development only
 if ('development' == app.get('env')) {
-  app.use(express.errorHandler());
+	app.use(express.errorHandler());
 }
 
 app.get('/', routes.index);
 app.get('/users', user.list);
 
-http.createServer(app).listen(app.get('port'), function(){
-  console.log('Express server listening on port ' + app.get('port'));
+server = http.createServer(app);
+server.listen(app.get('port'), function() {
+	console.log('Express server listening on port ' + app.get('port'));
+});
+
+io = SocketIo(server);
+
+io.on('connection', function connection(socket) {
+	console.log("Connection made");
+	socket.on('imavailable', function(data) {
+		console.log('Got imavailable');
+		socket.emit('build', {
+			buildname: 'charityaccounts', 
+			buildTarget: 'master', 
+			repository: 'git@github.com:andimclean/charityaccounts.git'});
+	});
 });
