@@ -6,6 +6,7 @@ var SocketIo = require('socket.io-client')
 		, git =require('./lib/git')
 		, crypto = require('crypto')
 		, exec = require('./lib/exec')
+		, filewalker = require('filewalker')
 		, step = require('step');
 
 var socket = SocketIo.connect('http://localhost:3000');
@@ -36,7 +37,13 @@ socket.on('build', function(data) {
 		function doBuild(err, buildDir) {
 			if (err)
 				throw err;
+			this.parallel()(null, buildDir);
 			doBuildOperations(data, buildDir, pipe, this.parallel());
+		},
+		function archive(err,buildDir) {
+			if (err)
+				throw err;
+			doArchive(data, buildDir, pipe, this.parallel());
 		}
 	);
 });
@@ -124,4 +131,27 @@ function doBuildOperations(data,buildDir, pipe, callback) {
 		pipe.recordTime('Build', new Date().getTime() - startTime);
 		callback(null, buildDir);
 	});
+}
+
+function doArchive(data, buildDir, pipe, callback) {
+	var startTime = new Date().getTime();
+	var regExp = [];
+	for( var loop = 0; loop < data.artifacts.length; loop +=1) {
+		regExp.push(new RegExp(data.artifacts[loop]));
+	}
+	
+	filewalker(buildDir)
+		.on('file', function(rel, stat, full){
+			for( var loop = 0; loop < regExp.length; loop +=1) {
+				if (regExp[loop].test(rel)) {
+					pipe.sendArtifact(full,rel);
+					return;
+				}
+			}	
+		})
+		.on('done', function() {
+			pipe.recordTime('Artifacts', new Date().getTime() - startTime);
+			callback();
+		})
+		.walk();
 }

@@ -10,6 +10,8 @@ module.exports = {
 	},
 	recordTime : function(tag, length) {
 		console.log('Timed : ', tag, ' : ', length);
+	},
+	sendArtifact : function(full,rel) {
+		console.log("Relative:", rel, ' fulname:', full);
 	}
-	
 };
